@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Halaman Formulir</title>
+
+        <!-- styling untuk halaman -->
+        <style>
+            body {
+                font-family: 'Arial', sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+
+            header {
+                background-color: #0085ad;
+                color: #fff;
+                padding: 15px 20px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            header img {
+                max-width: 80px;
+                height: auto;
+            }
+
+            h1 {
+                margin: 0;
+            }
+
+            header nav {
+                display: flex;
+                align-items: center;
+            }
+
+            nav a {
+                color: #fff;
+                text-decoration: none;
+                margin: 0 15px;
+                position: relative;
+                transition: color 0.3s ease-in-out;
+            }
+
+            nav a::before {
+                content: "";
+                position: absolute;
+                bottom: -5px;
+                left: 0;
+                width: 0;
+                height: 2px;
+                background-color: #fff;
+                transition: width 0.3s ease-in-out;
+            }
+
+            nav a:hover {
+                color: #ffcc00; 
+            }
+
+            nav a:hover::before {
+                width: 100%;
+            }
+
+            
+            h2 {
+                font-size: 24px;
+                color: #333;
+                margin-top: 50px;
+                text-align: center;
+            }
+
+            form {
+                max-width: 600px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: #f4f4f4;
+                border-radius: 8px;
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            }
+
+            form input,
+            form select {
+                width: calc(100% - 22px);
+                padding: 10px;
+                margin: 20px 0;
+                box-sizing: border-box;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+
+            form input[type="checkbox"],
+            form input[type="radio"] {
+                width: auto;
+                margin: 0 5px 0 0;
+            }
+
+            form input[type="submit"] {
+                background-color: #0085ad;
+                color: #fff;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+            }
+
+            form input[type="submit"]:hover {
+                background-color: #006699;
+            }
+
+            form a {
+                display: block;
+                margin-top: 10px;
+                text-align: center;
+                color: #0085ad;
+                text-decoration: none;
+            }
+
+            form a:hover {
+                text-decoration: underline;
+            }
+        </style>
+    </head>
+    <body>
+
+        <!-- header halaman  -->
+        <header>
+            <img src="./assets/logo.png" alt="Logo">
+            <h1>Food's Store</h1>
+            <nav>
+                <a href="index.html">Pemesanan</a>
+                <a href="tampilkan_data.php">Pesanan</a>
+            </nav>
+        </header>
+
+        <!-- judul halaman -->
+        <h2>FORMULIR PEMESANAN</h2>
+
+        <!-- formulir pemesanan -->
+        <form id="orderForm" action="proses.php" method="post">
+            <h3>Nama Pemesan</h3>
+            <input type="text" name="nama" id="nama" placeholder="Nama">
+            <br>
+            <h3>Pilih Pesanan</h3>
+            <input type="checkbox" name="makanan[]" value="pizza"> Pizza
+            <input type="checkbox" name="makanan[]" value="burger"> Burger
+            <input type="checkbox" name="makanan[]" value="pasta"> Pasta
+            <input type="checkbox" name="makanan[]" value="sushi"> Sushi
+            <br>
+            <h3>Jenis Pemesanan</h3>
+            <input type="radio" name="jenis_pemesanan" id="dine_in" value="dine_in"> Dine In
+            <input type="radio" name="jenis_pemesanan" id="take_home" value="take_home"> Take Home
+            
+            <br>
+            <h3>Pilih Metode Pengiriman</h3>
+            <select name="pengiriman" id="pengiriman">
+              <option value="" selected disabled>Pilih pengiriman</option>
+              <option value="dine_in">Makan di Tempat</option>
+              <option value="shopee_food">Shopee Food</option>
+              <option value="gosend">GoSend</option>
+              <option value="grabexpress">GrabExpress</option>
+            </select>
+            <br>
+            <input type="submit" value="Pesan">
+          </form>
+
+
+          <script>
+              // Fungsi-fungsi untuk Cookie dan localStorage
+              function setCookie(name, value, days) {
+                  const expires = new Date();
+                  expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000);
+                  document.cookie = `${name}=${value};expires=${expires.toUTCString()};path=/`;
+              }
+
+              // fungsi mendapatkan nama
+              function getCookie(name) {
+                  const cookieName = `${name}=`;
+                  const decodedCookie = decodeURIComponent(document.cookie);
+                  const cookieArray = decodedCookie.split(';');
+
+                  for (let i = 0; i < cookieArray.length; i++) {
+                    let cookie = cookieArray[i].trim();
+                    if (cookie.indexOf(cookieName) === 0) {
+                      return cookie.substring(cookieName.length, cookie.length);
+                    }
+                  }
+                  return null;
+              }
+
+              // fungsi menghapus nama
+              function deleteCookie(name) {
+                  document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 UTC;path=/;`;
+              }
+
+              // fungsi menyimpan
+              function setLocalStorage(key, value) {
+                  localStorage.setItem(key, JSON.stringify(value));
+              }
+              function getLocalStorage(key) {
+                const storedValue = localStorage.getItem(key);
+                return storedValue ? JSON.parse(storedValue) : null;
+              }
+
+              //fungsi menghapus
+              function deleteLocalStorage(key) {
+                localStorage.removeItem(key);
+              }
+
+
+              //fungsi memvalidasi pesanan
+              function validateForm() {
+                    // Validasi nama
+                    const nama = document.getElementById("nama");
+                    if (nama.value === "") {
+                        alert("Silahkan isi nama.");
+                        return false;
+                    }
+
+                    // Validasi makanan
+                    const makanan = document.querySelectorAll("input[name='makanan[]']:checked");
+                    if (makanan.length === 0) {
+                        alert("Silahkan pilih minimal satu makanan.");
+                        return false;
+                    }
+
+                    // Validasi jenis pemesanan
+                    const jenisPemesanan = document.querySelector("input[name='jenis_pemesanan']:checked");
+                    if (!jenisPemesanan) {
+                        alert("Silahkan pilih jenis pemesanan.");
+                        return false;
+                    }
+
+                    // Validasi pengiriman
+                    const pengiriman = document.querySelectorAll("input[name='pengiriman']:checked");
+                    if (!pengiriman) {
+                        alert("Silahkan pilih metode pengiriman.");
+                        return false;
+                    }
+                    return true;
+                }
+
+                //fungsi mengkonfirmasi pesanan
+                function showConfirmation() {
+                    if (confirm("Apakah Anda yakin ingin mengirim pesanan?")) {
+                        submitForm();
+                    }
+                }
+
+                // Event submit form
+                document.getElementById("orderForm").addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    if (validateForm()) {
+                        showConfirmation();
+                    }
+                });
+
+                // Fungsi untuk mengirim data form ke server
+                function submitForm() {
+                    const data = new FormData(document.getElementById("orderForm"));
+                    fetch("proses.php", {
+                        method: "POST",
+                        body: data,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                      if (data.success) {
+                        window.location.href = "tampilkan_data.php";
+                    } else {
+                        alert(data.error);
+                    }
+                });
+                }
+        </script>
+
+    </body>
+</html>
